@@ -1,52 +1,52 @@
 //
-//  ProduceListView.swift
+//  VIPERProduceListView.swift
 //  ArchitectureOptions
 //
 
 import SwiftUI
 
-extension MVVM {
+extension VIPER {
     struct ProduceListView: View {
-        @State private var viewModel: ProduceListViewModel
+        @State private var presenter: ProduceListPresenter
 
-        init(viewModel: ProduceListViewModel = ProduceListViewModel()) {
-            _viewModel = State(initialValue: viewModel)
+        init(presenter: ProduceListPresenter) {
+            _presenter = State(initialValue: presenter)
         }
 
         var body: some View {
-            List(viewModel.sortedProduce) { item in
-                ProduceRow(produce: item)
+            List(presenter.rows) { row in
+                ProduceRow(row: row)
             }
-            .animation(.default, value: viewModel.sortOrder)
-            .navigationTitle("Produce (MVVM)")
+            .animation(.default, value: presenter.rows)
+            .navigationTitle(presenter.title)
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button {
-                        viewModel.toggleSortOrder()
+                        presenter.didTapSort()
                     } label: {
-                        Label(viewModel.sortButtonTitle, systemImage: viewModel.sortButtonSystemImage)
+                        Label(presenter.sortButtonTitle, systemImage: presenter.sortButtonSystemImage)
                             .labelStyle(.titleAndIcon)
                     }
                     .accessibilityIdentifier("sortButton")
                 }
             }
             .task {
-                viewModel.load()
+                presenter.viewDidLoad()
             }
         }
     }
 
     struct ProduceRow: View {
-        let produce: Produce
+        let row: ProduceRowViewModel
 
         var body: some View {
             HStack {
-                Text(produce.emoji)
+                Text(row.emoji)
                     .font(.largeTitle)
                 VStack(alignment: .leading) {
-                    Text(produce.name)
+                    Text(row.title)
                         .font(.headline)
-                    Text(produce.kind.rawValue)
+                    Text(row.subtitle)
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -57,6 +57,6 @@ extension MVVM {
 
 #Preview {
     NavigationStack {
-        MVVM.ProduceListView()
+        VIPER.ProduceListRouter.createModule()
     }
 }

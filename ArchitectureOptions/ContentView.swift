@@ -14,6 +14,9 @@ struct ContentView: View {
                 NavigationLink("MVVM") {
                     MVVM.ProduceListView()
                 }
+                NavigationLink("VIPER") {
+                    VIPER.ProduceListRouter.createModule()
+                }
             }
             .navigationTitle("Architectures")
         }

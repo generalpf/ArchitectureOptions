@@ -1,15 +1,11 @@
 //
-//  ProduceRepository.swift
+//  VIPERStaticProduceDataSource.swift
 //  ArchitectureOptions
 //
 
-extension MVVM {
-    protocol ProduceRepository {
-        func fetchProduce() -> [Produce]
-    }
-
-    struct StaticProduceRepository: ProduceRepository {
-        func fetchProduce() -> [Produce] {
+extension VIPER {
+    struct StaticProduceDataSource: ProduceDataSource {
+        func allProduce() -> [Produce] {
             [
                 Produce(name: "Banana", kind: .fruit, emoji: "🍌"),
                 Produce(name: "Carrot", kind: .vegetable, emoji: "🥕"),
