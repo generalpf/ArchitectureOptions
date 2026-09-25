@@ -6,6 +6,10 @@
 	objectVersion = 110;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		E1A0C0DE0000000000000001 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = E1A0C0DE0000000000000003 /* ComposableArchitecture */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		D7240A4130671C1600DDFD4A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -51,6 +55,7 @@
 		D7240A3030671C1500DDFD4A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+				E1A0C0DE0000000000000001 /* ComposableArchitecture in Frameworks */,
 			);
 		};
 		D7240A3D30671C1600DDFD4A /* Frameworks */ = {
@@ -103,6 +108,9 @@
 				D7240A3530671C1500DDFD4A /* ArchitectureOptions */,
 			);
 			name = ArchitectureOptions;
+			packageProductDependencies = (
+				E1A0C0DE0000000000000003 /* ComposableArchitecture */,
+			);
 			productName = ArchitectureOptions;
 			productReference = D7240A3330671C1500DDFD4A /* ArchitectureOptions.app */;
 			productType = "com.apple.product-type.application";
@@ -181,6 +189,9 @@
 			);
 			mainGroup = D7240A2A30671C1500DDFD4A;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				E1A0C0DE0000000000000002 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D7240A3430671C1500DDFD4A /* Products */;
 			projectDirPath = "";
@@ -548,6 +559,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E1A0C0DE0000000000000002 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.26.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E1A0C0DE0000000000000003 /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E1A0C0DE0000000000000002 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D7240A2B30671C1500DDFD4A /* Project object */;
 	validationLevel = 1;

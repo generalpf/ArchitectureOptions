@@ -5,6 +5,7 @@
 //  Created by Ryan Walberg on 2026-09-25.
 //
 
+import ComposableArchitecture
 import SwiftUI
 
 struct ContentView: View {
@@ -16,6 +17,13 @@ struct ContentView: View {
                 }
                 NavigationLink("VIPER") {
                     VIPER.ProduceListRouter.createModule()
+                }
+                NavigationLink("TCA") {
+                    TCA.ProduceListView(
+                        store: Store(initialState: TCA.ProduceListFeature.State()) {
+                            TCA.ProduceListFeature()
+                        }
+                    )
                 }
             }
             .navigationTitle("Architectures")
