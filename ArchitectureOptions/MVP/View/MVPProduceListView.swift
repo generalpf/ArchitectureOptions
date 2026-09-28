@@ -1,29 +1,34 @@
 //
-//  VIPERProduceListView.swift
+//  MVPProduceListView.swift
 //  ArchitectureOptions
 //
 
 import SwiftUI
 
-extension VIPER {
+extension MVP {
     struct ProduceListView: View {
+        @State private var display: ProduceListDisplay
         @State private var presenter: ProduceListPresenter
 
-        init(presenter: ProduceListPresenter) {
+        init(repository: ProduceRepository = StaticProduceRepository()) {
+            let display = ProduceListDisplay()
+            let presenter = ProduceListPresenter(repository: repository)
+            presenter.view = display
+            _display = State(initialValue: display)
             _presenter = State(initialValue: presenter)
         }
 
         var body: some View {
-            List(presenter.rows) { row in
+            List(display.rows) { row in
                 ProduceRow(row: row)
             }
-            .animation(.default, value: presenter.rows)
+            .animation(.default, value: display.rows)
             .safeAreaInset(edge: .top) {
                 Picker("Filter", selection: Binding(
-                    get: { presenter.filter },
+                    get: { display.selectedFilter },
                     set: { presenter.didSelectFilter($0) }
                 )) {
-                    ForEach(ProduceFilter.allCases) { filter in
+                    ForEach(ProduceListPresenter.Filter.allCases) { filter in
                         Text(filter.title).tag(filter)
                     }
                 }
@@ -31,14 +36,13 @@ extension VIPER {
                 .padding(.horizontal)
                 .padding(.bottom, 8)
             }
-            .navigationTitle(presenter.title)
+            .navigationTitle("Produce (MVP)")
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button {
-                        // I'd prefer to send an enumerated action here
                         presenter.didTapSort()
                     } label: {
-                        Label(presenter.sortButtonTitle, systemImage: presenter.sortButtonSystemImage)
+                        Label(display.sortButtonTitle, systemImage: display.sortButtonSystemImage)
                             .labelStyle(.titleAndIcon)
                     }
                     .accessibilityIdentifier("sortButton")
@@ -71,6 +75,6 @@ extension VIPER {
 
 #Preview {
     NavigationStack {
-        VIPER.ProduceListRouter.createModule()
+        MVP.ProduceListView()
     }
 }

@@ -14,10 +14,20 @@ extension MVVM {
         }
 
         var body: some View {
-            List(viewModel.sortedProduce) { item in
+            List(viewModel.visibleProduce) { item in
                 ProduceRow(produce: item)
             }
-            .animation(.default, value: viewModel.sortOrder)
+            .animation(.default, value: viewModel.visibleProduce)
+            .safeAreaInset(edge: .top) {
+                Picker("Filter", selection: $viewModel.filter) {
+                    ForEach(ProduceListViewModel.Filter.allCases) { filter in
+                        Text(filter.title).tag(filter)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal)
+                .padding(.bottom, 8)
+            }
             .navigationTitle("Produce (MVVM)")
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {

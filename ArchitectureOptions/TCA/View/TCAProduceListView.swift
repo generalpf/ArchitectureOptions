@@ -8,13 +8,23 @@ import SwiftUI
 
 extension TCA {
     struct ProduceListView: View {
-        let store: StoreOf<ProduceListFeature>
+        @Bindable var store: StoreOf<ProduceListFeature>
 
         var body: some View {
-            List(store.produce) { item in
+            List(store.visibleProduce) { item in
                 ProduceRow(produce: item)
             }
-            .animation(.default, value: store.sortOrder)
+            .animation(.default, value: store.visibleProduce)
+            .safeAreaInset(edge: .top) {
+                Picker("Filter", selection: $store.filter.sending(\.filterChanged)) {
+                    ForEach(ProduceListFeature.Filter.allCases) { filter in
+                        Text(filter.title).tag(filter)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal)
+                .padding(.bottom, 8)
+            }
             .navigationTitle("Produce (TCA)")
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {

@@ -23,7 +23,7 @@ struct ProduceListViewModelTests {
         viewModel.load()
 
         #expect(viewModel.sortOrder == .ascending)
-        #expect(viewModel.sortedProduce.map(\.name) == ["Apple", "banana", "Carrot"])
+        #expect(viewModel.visibleProduce.map(\.name) == ["Apple", "banana", "Carrot"])
     }
 
     @Test func toggleSortsReverseAlphabetically() {
@@ -33,7 +33,7 @@ struct ProduceListViewModelTests {
         viewModel.toggleSortOrder()
 
         #expect(viewModel.sortOrder == .descending)
-        #expect(viewModel.sortedProduce.map(\.name) == ["Carrot", "banana", "Apple"])
+        #expect(viewModel.visibleProduce.map(\.name) == ["Carrot", "banana", "Apple"])
     }
 
     @Test func toggleTwiceReturnsToAlphabetical() {
@@ -43,6 +43,34 @@ struct ProduceListViewModelTests {
         viewModel.toggleSortOrder()
         viewModel.toggleSortOrder()
 
-        #expect(viewModel.sortedProduce.map(\.name) == ["Apple", "banana", "Carrot"])
+        #expect(viewModel.visibleProduce.map(\.name) == ["Apple", "banana", "Carrot"])
+    }
+
+    @Test func defaultsToAllFilter() {
+        let viewModel = MVVM.ProduceListViewModel(repository: StubRepository())
+        viewModel.load()
+
+        #expect(viewModel.filter == .all)
+        #expect(viewModel.visibleProduce.count == 3)
+    }
+
+    @Test func filtersToFruit() {
+        let viewModel = MVVM.ProduceListViewModel(repository: StubRepository())
+        viewModel.load()
+
+        viewModel.filter = .fruit
+
+        #expect(viewModel.visibleProduce.map(\.name) == ["Apple", "banana"])
+    }
+
+    @Test func filtersToVegetablesAndKeepsSortOrder() {
+        let viewModel = MVVM.ProduceListViewModel(repository: StubRepository())
+        viewModel.load()
+
+        viewModel.toggleSortOrder()
+        viewModel.filter = .vegetables
+
+        #expect(viewModel.visibleProduce.map(\.name) == ["Carrot"])
+        #expect(viewModel.sortOrder == .descending)
     }
 }

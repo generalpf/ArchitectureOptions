@@ -28,7 +28,7 @@ struct VIPERProduceListInteractorTests {
         let output = SpyOutput()
         interactor.output = output
 
-        interactor.loadProduce(sortedBy: .ascending)
+        interactor.loadProduce(sortedBy: .ascending, filteredBy: .all)
 
         #expect(output.loaded.map(\.name) == ["Apple", "banana", "Carrot"])
     }
@@ -38,9 +38,29 @@ struct VIPERProduceListInteractorTests {
         let output = SpyOutput()
         interactor.output = output
 
-        interactor.loadProduce(sortedBy: .descending)
+        interactor.loadProduce(sortedBy: .descending, filteredBy: .all)
 
         #expect(output.loaded.map(\.name) == ["Carrot", "banana", "Apple"])
+    }
+
+    @Test func filtersToFruit() {
+        let interactor = VIPER.ProduceListInteractor(dataSource: StubDataSource())
+        let output = SpyOutput()
+        interactor.output = output
+
+        interactor.loadProduce(sortedBy: .ascending, filteredBy: .fruit)
+
+        #expect(output.loaded.map(\.name) == ["Apple", "banana"])
+    }
+
+    @Test func filtersToVegetables() {
+        let interactor = VIPER.ProduceListInteractor(dataSource: StubDataSource())
+        let output = SpyOutput()
+        interactor.output = output
+
+        interactor.loadProduce(sortedBy: .ascending, filteredBy: .vegetables)
+
+        #expect(output.loaded.map(\.name) == ["Carrot"])
     }
 }
 
@@ -48,7 +68,11 @@ struct VIPERProduceListInteractorTests {
 struct VIPERProduceListPresenterTests {
     private final class SpyInteractor: VIPER.ProduceListInteractorInput {
         var requestedOrders: [VIPER.SortOrder] = []
-        func loadProduce(sortedBy order: VIPER.SortOrder) { requestedOrders.append(order) }
+        var requestedFilters: [VIPER.ProduceFilter] = []
+        func loadProduce(sortedBy order: VIPER.SortOrder, filteredBy filter: VIPER.ProduceFilter) {
+            requestedOrders.append(order)
+            requestedFilters.append(filter)
+        }
     }
 
     @Test func viewDidLoadRequestsAscending() {
@@ -58,6 +82,19 @@ struct VIPERProduceListPresenterTests {
         presenter.viewDidLoad()
 
         #expect(interactor.requestedOrders == [.ascending])
+        #expect(interactor.requestedFilters == [.all])
+    }
+
+    @Test func selectFilterRequestsFilterAndKeepsSortOrder() {
+        let interactor = SpyInteractor()
+        let presenter = VIPER.ProduceListPresenter(interactor: interactor, router: VIPER.ProduceListRouter())
+
+        presenter.didTapSort()
+        presenter.didSelectFilter(.vegetables)
+
+        #expect(interactor.requestedFilters == [.all, .vegetables])
+        #expect(interactor.requestedOrders == [.descending, .descending])
+        #expect(presenter.filter == .vegetables)
     }
 
     @Test func tapSortTogglesAndRequestsNewOrder() {

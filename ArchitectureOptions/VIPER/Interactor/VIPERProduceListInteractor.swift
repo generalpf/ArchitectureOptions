@@ -15,8 +15,15 @@ extension VIPER {
             self.dataSource = dataSource
         }
 
-        func loadProduce(sortedBy order: SortOrder) {
-            let sorted = dataSource.allProduce().sorted { lhs, rhs in
+        func loadProduce(sortedBy order: SortOrder, filteredBy filter: ProduceFilter) {
+            let filtered = dataSource.allProduce().filter { produce in
+                switch filter {
+                case .fruit: produce.kind == .fruit
+                case .vegetables: produce.kind == .vegetable
+                case .all: true
+                }
+            }
+            let sorted = filtered.sorted { lhs, rhs in
                 let result = lhs.name.localizedStandardCompare(rhs.name)
                 return order == .ascending
                     ? result == .orderedAscending

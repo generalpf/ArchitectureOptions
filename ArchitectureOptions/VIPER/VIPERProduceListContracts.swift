@@ -15,15 +15,32 @@ extension VIPER {
         }
     }
 
+    enum ProduceFilter: CaseIterable, Identifiable {
+        case fruit
+        case vegetables
+        case all
+
+        var id: Self { self }
+
+        var title: String {
+            switch self {
+            case .fruit: "Fruit"
+            case .vegetables: "Vegetables"
+            case .all: "All"
+            }
+        }
+    }
+
     /// View -> Presenter
     protocol ProduceListPresenterInput: AnyObject {
         func viewDidLoad()
         func didTapSort()
+        func didSelectFilter(_ filter: ProduceFilter)
     }
 
     /// Presenter -> Interactor
     protocol ProduceListInteractorInput: AnyObject {
-        func loadProduce(sortedBy order: SortOrder)
+        func loadProduce(sortedBy order: SortOrder, filteredBy filter: ProduceFilter)
     }
 
     /// Interactor -> Presenter

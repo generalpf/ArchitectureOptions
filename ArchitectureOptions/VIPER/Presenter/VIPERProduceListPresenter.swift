@@ -19,6 +19,7 @@ extension VIPER {
     final class ProduceListPresenter: ProduceListPresenterInput, ProduceListInteractorOutput {
         private(set) var rows: [ProduceRowViewModel] = []
         private(set) var sortOrder: SortOrder = .ascending
+        private(set) var filter: ProduceFilter = .all
 
         var title: String { "Produce (VIPER)" }
 
@@ -41,12 +42,17 @@ extension VIPER {
         // MARK: ProduceListPresenterInput
 
         func viewDidLoad() {
-            interactor.loadProduce(sortedBy: sortOrder)
+            interactor.loadProduce(sortedBy: sortOrder, filteredBy: filter)
         }
 
         func didTapSort() {
             sortOrder = sortOrder.toggled
-            interactor.loadProduce(sortedBy: sortOrder)
+            interactor.loadProduce(sortedBy: sortOrder, filteredBy: filter)
+        }
+
+        func didSelectFilter(_ filter: ProduceFilter) {
+            self.filter = filter
+            interactor.loadProduce(sortedBy: sortOrder, filteredBy: filter)
         }
 
         // MARK: ProduceListInteractorOutput

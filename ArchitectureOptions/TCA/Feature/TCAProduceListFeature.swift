@@ -18,10 +18,47 @@ extension TCA {
             }
         }
 
+        enum Filter: CaseIterable, Identifiable, Equatable, Sendable {
+            case fruit
+            case vegetables
+            case all
+
+            var id: Self { self }
+
+            var title: String {
+                switch self {
+                case .fruit: "Fruit"
+                case .vegetables: "Vegetables"
+                case .all: "All"
+                }
+            }
+
+            func includes(_ kind: Produce.Kind) -> Bool {
+                switch self {
+                case .fruit: kind == .fruit
+                case .vegetables: kind == .vegetable
+                case .all: true
+                }
+            }
+        }
+
         @ObservableState
         struct State: Equatable {
             var produce: IdentifiedArrayOf<Produce> = []
             var sortOrder: SortOrder = .ascending
+            var filter: Filter = .all
+
+            /// Derived from `produce`, `filter` and `sortOrder` so there's a single source of truth.
+            var visibleProduce: [Produce] {
+                produce
+                    .filter { filter.includes($0.kind) }
+                    .sorted { lhs, rhs in
+                        let result = lhs.name.localizedStandardCompare(rhs.name)
+                        return sortOrder == .ascending
+                            ? result == .orderedAscending
+                            : result == .orderedDescending
+                    }
+            }
 
             var sortButtonTitle: String {
                 sortOrder == .ascending ? "A → Z" : "Z → A"
@@ -36,6 +73,7 @@ extension TCA {
             case task
             case produceLoaded([Produce])
             case sortButtonTapped
+            case filterChanged(Filter)
         }
 
         @Dependency(\.produceClient) var produceClient
@@ -49,23 +87,17 @@ extension TCA {
                     }
 
                 case let .produceLoaded(produce):
-                    state.produce = IdentifiedArray(uniqueElements: Self.sorted(produce, by: state.sortOrder))
+                    state.produce = IdentifiedArray(uniqueElements: produce)
                     return .none
 
                 case .sortButtonTapped:
                     state.sortOrder = state.sortOrder.toggled
-                    state.produce = IdentifiedArray(uniqueElements: Self.sorted(Array(state.produce), by: state.sortOrder))
+                    return .none
+
+                case let .filterChanged(filter):
+                    state.filter = filter
                     return .none
                 }
-            }
-        }
-
-        private static func sorted(_ produce: [Produce], by order: SortOrder) -> [Produce] {
-            produce.sorted { lhs, rhs in
-                let result = lhs.name.localizedStandardCompare(rhs.name)
-                return order == .ascending
-                    ? result == .orderedAscending
-                    : result == .orderedDescending
             }
         }
     }
