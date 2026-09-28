@@ -11,8 +11,10 @@ extension MVP {
         @State private var presenter: ProduceListPresenter
 
         init(repository: ProduceRepository = StaticProduceRepository()) {
-            let display = ProduceListDisplay()
-            let presenter = ProduceListPresenter(repository: repository)
+            self.init(presenter: ProduceListPresenter(repository: repository), display: ProduceListDisplay())
+        }
+
+        init(presenter: ProduceListPresenter, display: ProduceListDisplay) {
             presenter.view = display
             _display = State(initialValue: display)
             _presenter = State(initialValue: presenter)
@@ -33,6 +35,7 @@ extension MVP {
                     }
                 }
                 .pickerStyle(.segmented)
+                .accessibilityIdentifier("filterPicker")
                 .padding(.horizontal)
                 .padding(.bottom, 8)
             }

@@ -28,6 +28,7 @@ extension VIPER {
                     }
                 }
                 .pickerStyle(.segmented)
+                .accessibilityIdentifier("filterPicker")
                 .padding(.horizontal)
                 .padding(.bottom, 8)
             }

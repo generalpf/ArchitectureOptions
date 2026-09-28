@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E1A0C0DE0000000000000001 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = E1A0C0DE0000000000000003 /* ComposableArchitecture */; };
+		E1A0C0DE0000000000000011 /* ViewInspector in Frameworks */ = {isa = PBXBuildFile; productRef = E1A0C0DE0000000000000013 /* ViewInspector */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,7 @@
 		D7240A3D30671C1600DDFD4A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+				E1A0C0DE0000000000000011 /* ViewInspector in Frameworks */,
 			);
 		};
 		D7240A4730671C1600DDFD4A /* Frameworks */ = {
@@ -132,6 +134,9 @@
 				D7240A4330671C1600DDFD4A /* ArchitectureOptionsTests */,
 			);
 			name = ArchitectureOptionsTests;
+			packageProductDependencies = (
+				E1A0C0DE0000000000000013 /* ViewInspector */,
+			);
 			productName = ArchitectureOptionsTests;
 			productReference = D7240A4030671C1600DDFD4A /* ArchitectureOptionsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -191,6 +196,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				E1A0C0DE0000000000000002 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				E1A0C0DE0000000000000012 /* XCLocalSwiftPackageReference "Packages/ViewInspector" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D7240A3430671C1500DDFD4A /* Products */;
@@ -560,6 +566,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		E1A0C0DE0000000000000012 /* XCLocalSwiftPackageReference "Packages/ViewInspector" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/ViewInspector;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		E1A0C0DE0000000000000002 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -576,6 +589,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E1A0C0DE0000000000000002 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
 			productName = ComposableArchitecture;
+		};
+		E1A0C0DE0000000000000013 /* ViewInspector */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ViewInspector;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

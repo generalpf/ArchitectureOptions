@@ -69,7 +69,7 @@ extension TCA {
             }
         }
 
-        enum Action: Sendable {
+        enum Action: Equatable, Sendable {
             case task
             case produceLoaded([Produce])
             case sortButtonTapped
