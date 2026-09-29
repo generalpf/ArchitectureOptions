@@ -3,12 +3,11 @@
 //  ArchitectureOptions
 //
 
+import Combine
 import Foundation
-import Observation
 
 extension MVVM {
-    @Observable
-    final class ProduceListViewModel {
+    final class ProduceListViewModel: ObservableObject {
         enum SortOrder {
             case ascending
             case descending
@@ -42,9 +41,9 @@ extension MVVM {
             }
         }
 
-        private(set) var sortOrder: SortOrder = .ascending
-        var filter: Filter = .all
-        private var produce: [Produce] = []
+        @Published private(set) var sortOrder: SortOrder = .ascending
+        @Published var filter: Filter = .all
+        @Published private var produce: [Produce] = []
 
         private let repository: ProduceRepository
 

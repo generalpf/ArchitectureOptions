@@ -7,10 +7,12 @@ import SwiftUI
 
 extension MVVM {
     struct ProduceListView: View {
-        @State private var viewModel: ProduceListViewModel
+        @StateObject private var viewModel: ProduceListViewModel
 
-        init(viewModel: ProduceListViewModel = ProduceListViewModel()) {
-            _viewModel = State(initialValue: viewModel)
+        /// `@autoclosure` keeps creation lazy: `StateObject` only builds the view model
+        /// the first time this view appears, not on every re-init of the struct.
+        init(viewModel: @autoclosure @escaping () -> ProduceListViewModel = ProduceListViewModel()) {
+            _viewModel = StateObject(wrappedValue: viewModel())
         }
 
         var body: some View {
@@ -67,7 +69,7 @@ extension MVVM {
 }
 
 #Preview {
-    NavigationStack {
+    NavigationView {
         MVVM.ProduceListView()
     }
 }
