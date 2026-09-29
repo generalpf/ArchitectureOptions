@@ -7,7 +7,9 @@ import SwiftUI
 
 extension MVP {
     struct ProduceListView: View {
-        @State private var display: ProduceListDisplay
+        /// Observed: the Presenter pushes values into it and the view redraws.
+        @StateObject private var display: ProduceListDisplay
+        /// Not observed, only called. `@State` just keeps the same instance alive across re-inits.
         @State private var presenter: ProduceListPresenter
 
         init(repository: ProduceRepository = StaticProduceRepository()) {
@@ -16,7 +18,7 @@ extension MVP {
 
         init(presenter: ProduceListPresenter, display: ProduceListDisplay) {
             presenter.view = display
-            _display = State(initialValue: display)
+            _display = StateObject(wrappedValue: display)
             _presenter = State(initialValue: presenter)
         }
 
@@ -77,7 +79,7 @@ extension MVP {
 }
 
 #Preview {
-    NavigationStack {
+    NavigationView {
         MVP.ProduceListView()
     }
 }

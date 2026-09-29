@@ -7,10 +7,10 @@ import SwiftUI
 
 extension VIPER {
     struct ProduceListView: View {
-        @State private var presenter: ProduceListPresenter
+        @StateObject private var presenter: ProduceListPresenter
 
-        init(presenter: ProduceListPresenter) {
-            _presenter = State(initialValue: presenter)
+        init(presenter: @autoclosure @escaping () -> ProduceListPresenter) {
+            _presenter = StateObject(wrappedValue: presenter())
         }
 
         var body: some View {
@@ -71,7 +71,7 @@ extension VIPER {
 }
 
 #Preview {
-    NavigationStack {
+    NavigationView {
         VIPER.ProduceListRouter.createModule()
     }
 }

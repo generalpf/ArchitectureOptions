@@ -6,8 +6,8 @@
 //  the View never pulls from the Presenter or the Model.
 //
 
+import Combine
 import Foundation
-import Observation
 
 extension MVP {
     struct ProduceRowViewModel: Identifiable, Equatable {
@@ -25,12 +25,11 @@ extension MVP {
 
     /// SwiftUI views are structs, so they can't be the Presenter's (weak, reference-type) view.
     /// This adapter is the object the Presenter talks to; the SwiftUI view renders whatever it holds.
-    @Observable
-    final class ProduceListDisplay: ProduceListViewProtocol {
-        private(set) var rows: [ProduceRowViewModel] = []
-        private(set) var sortButtonTitle = ""
-        private(set) var sortButtonSystemImage = ""
-        private(set) var selectedFilter: ProduceListPresenter.Filter = .all
+    final class ProduceListDisplay: ObservableObject, ProduceListViewProtocol {
+        @Published private(set) var rows: [ProduceRowViewModel] = []
+        @Published private(set) var sortButtonTitle = ""
+        @Published private(set) var sortButtonSystemImage = ""
+        @Published private(set) var selectedFilter: ProduceListPresenter.Filter = .all
 
         func display(rows: [ProduceRowViewModel]) {
             self.rows = rows

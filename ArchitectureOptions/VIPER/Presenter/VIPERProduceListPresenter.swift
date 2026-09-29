@@ -3,8 +3,8 @@
 //  ArchitectureOptions
 //
 
+import Combine
 import Foundation
-import Observation
 
 extension VIPER {
     /// Display-ready data for a single row. The View never sees `Produce` entities.
@@ -15,11 +15,10 @@ extension VIPER {
         let emoji: String
     }
 
-    @Observable
-    final class ProduceListPresenter: ProduceListPresenterInput, ProduceListInteractorOutput {
-        private(set) var rows: [ProduceRowViewModel] = []
-        private(set) var sortOrder: SortOrder = .ascending
-        private(set) var filter: ProduceFilter = .all
+    final class ProduceListPresenter: ObservableObject, ProduceListPresenterInput, ProduceListInteractorOutput {
+        @Published private(set) var rows: [ProduceRowViewModel] = []
+        @Published private(set) var sortOrder: SortOrder = .ascending
+        @Published private(set) var filter: ProduceFilter = .all
 
         var title: String { "Produce (VIPER)" }
 
@@ -31,8 +30,8 @@ extension VIPER {
             sortOrder == .ascending ? "arrow.up" : "arrow.down"
         }
 
-        @ObservationIgnored private let interactor: ProduceListInteractorInput
-        @ObservationIgnored private let router: ProduceListRouter
+        private let interactor: ProduceListInteractorInput
+        private let router: ProduceListRouter
 
         init(interactor: ProduceListInteractorInput, router: ProduceListRouter) {
             self.interactor = interactor
