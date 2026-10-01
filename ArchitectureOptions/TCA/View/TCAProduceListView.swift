@@ -8,38 +8,42 @@ import SwiftUI
 
 extension TCA {
     struct ProduceListView: View {
-        @Bindable var store: StoreOf<ProduceListFeature>
+        /// `@Perception.Bindable` + `WithPerceptionTracking` back-port TCA's observation to iOS 16;
+        /// SwiftUI's own `@Bindable` and observation tracking need iOS 17.
+        @Perception.Bindable var store: StoreOf<ProduceListFeature>
 
         var body: some View {
-            List(store.visibleProduce) { item in
-                ProduceRow(produce: item)
-            }
-            .animation(.default, value: store.visibleProduce)
-            .safeAreaInset(edge: .top) {
-                Picker("Filter", selection: $store.filter.sending(\.filterChanged)) {
-                    ForEach(ProduceListFeature.Filter.allCases) { filter in
-                        Text(filter.title).tag(filter)
+            WithPerceptionTracking {
+                List(store.visibleProduce) { item in
+                    ProduceRow(produce: item)
+                }
+                .animation(.default, value: store.visibleProduce)
+                .safeAreaInset(edge: .top) {
+                    Picker("Filter", selection: $store.filter.sending(\.filterChanged)) {
+                        ForEach(ProduceListFeature.Filter.allCases) { filter in
+                            Text(filter.title).tag(filter)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .accessibilityIdentifier("filterPicker")
+                    .padding(.horizontal)
+                    .padding(.bottom, 8)
+                }
+                .navigationTitle("Produce (TCA)")
+                .toolbar {
+                    ToolbarItem(placement: .primaryAction) {
+                        Button {
+                            store.send(.sortButtonTapped)
+                        } label: {
+                            Label(store.sortButtonTitle, systemImage: store.sortButtonSystemImage)
+                                .labelStyle(.titleAndIcon)
+                        }
+                        .accessibilityIdentifier("sortButton")
                     }
                 }
-                .pickerStyle(.segmented)
-                .accessibilityIdentifier("filterPicker")
-                .padding(.horizontal)
-                .padding(.bottom, 8)
-            }
-            .navigationTitle("Produce (TCA)")
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Button {
-                        store.send(.sortButtonTapped)
-                    } label: {
-                        Label(store.sortButtonTitle, systemImage: store.sortButtonSystemImage)
-                            .labelStyle(.titleAndIcon)
-                    }
-                    .accessibilityIdentifier("sortButton")
+                .task {
+                    await store.send(.task).finish()
                 }
-            }
-            .task {
-                await store.send(.task).finish()
             }
         }
     }
